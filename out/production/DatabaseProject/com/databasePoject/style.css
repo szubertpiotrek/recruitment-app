@@ -1,0 +1,14 @@
+.root{
+    -fx-background-color: lightblue;
+}
+
+.button{
+    -fx-border-color: blue;
+    -fx-background-color: blue;
+    transition: 1s;
+}
+
+.button:hover{
+    -fx-border-color: green;
+    -fx-background-color: green;
+}
