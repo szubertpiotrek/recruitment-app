@@ -1,6 +1,7 @@
 package com.databasePoject;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,17 +10,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.awt.*;
 import java.util.List;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
         primaryStage.setTitle("Recruitment App");
         Scene scene = new Scene(root, 760, 580);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
+        primaryStage.setOnHidden(e -> {
+            controller.exitApp();
+            Platform.exit();
+        });
         primaryStage.show();
     }
 
