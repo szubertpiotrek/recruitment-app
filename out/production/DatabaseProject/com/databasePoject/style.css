@@ -3,12 +3,16 @@
 }
 
 .button{
-    -fx-border-color: blue;
-    -fx-background-color: blue;
-    transition: 1s;
+    -fx-border-color: royalblue;
+    -fx-background-color: royalblue;
 }
 
-.button:hover{
-    -fx-border-color: green;
-    -fx-background-color: green;
+.input{
+    -fx-border-color: blue;
+}
+
+#label1,#label2{
+    -fx-background-color: skyblue;
+    -fx-border-radius: 10px;
+    -fx-padding: 5px;
 }

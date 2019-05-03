@@ -74,14 +74,13 @@
                         <Label fx:id="labelDeclaration4" layoutX="230.0" layoutY="392.0" prefHeight="16.0" prefWidth="511.0" text="Brak wyboru" />
                         <Label fx:id="labelDeclaration3" layoutX="228.0" layoutY="309.0" prefHeight="16.0" prefWidth="512.0" text="Brak wyboru" />
                         <Label fx:id="labelDeclaration2" layoutX="231.0" layoutY="222.0" prefHeight="16.0" prefWidth="506.0" text="Brak wyboru" />
-                        <Button fx:id="saveDeclarationButton" layoutX="558.0" layoutY="502.0" mnemonicParsing="false" onAction="#saveDeclaration" text="Save" />
-                        <Button layoutX="637.0" layoutY="502.0" mnemonicParsing="false" text="Edit" />
-                        <TextField fx:id="inputExamScore1" layoutX="700.0" layoutY="105.0" prefHeight="26.0" prefWidth="40.0" />
+                        <Button fx:id="saveDeclarationButton" layoutX="597.0" layoutY="494.0" mnemonicParsing="false" onAction="#saveDeclaration" prefHeight="26.0" prefWidth="57.0" text="Edit" />
+                        <TextField fx:id="inputExamScore1" layoutX="700.0" layoutY="105.0" prefHeight="26.0" prefWidth="40.0" styleClass="input" />
                         <Label layoutX="698.0" layoutY="76.0" text="Punkty" />
-                        <TextField fx:id="inputExamScore5" layoutX="700.0" layoutY="434.0" prefHeight="26.0" prefWidth="40.0" />
-                        <TextField fx:id="inputExamScore4" layoutX="700.0" layoutY="354.0" prefHeight="26.0" prefWidth="40.0" />
-                        <TextField fx:id="inputExamScore3" layoutX="700.0" layoutY="269.0" prefHeight="26.0" prefWidth="40.0" />
-                        <TextField fx:id="inputExamScore2" layoutX="700.0" layoutY="185.0" prefHeight="26.0" prefWidth="40.0" />
+                        <TextField fx:id="inputExamScore5" layoutX="700.0" layoutY="434.0" prefHeight="26.0" prefWidth="40.0" styleClass="input" />
+                        <TextField fx:id="inputExamScore4" layoutX="700.0" layoutY="354.0" prefHeight="26.0" prefWidth="40.0" styleClass="input" />
+                        <TextField fx:id="inputExamScore3" layoutX="700.0" layoutY="269.0" prefHeight="26.0" prefWidth="40.0" styleClass="input" />
+                        <TextField fx:id="inputExamScore2" layoutX="700.0" layoutY="185.0" prefHeight="26.0" prefWidth="40.0" styleClass="input" />
                      </children></AnchorPane>
                </content></Tab>
             <Tab onSelectionChanged="#clickDataStudent" text="Dane Studenta">
@@ -89,9 +88,9 @@
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="82.0" layoutY="87.0" prefHeight="23.0" prefWidth="48.0" text="Imię" />
-                        <Label fx:id="labelName" layoutX="224.0" layoutY="91.0" prefHeight="16.0" prefWidth="155.0" text="Label" />
+                        <Label id="label1" fx:id="labelName" layoutX="224.0" layoutY="91.0" prefHeight="16.0" prefWidth="155.0" text="Label" />
                         <Label layoutX="82.0" layoutY="165.0" prefHeight="22.0" prefWidth="79.0" text="Nazwisko" />
-                        <Label fx:id="labelSurname" layoutX="224.0" layoutY="168.0" prefHeight="16.0" prefWidth="155.0" text="Label" />
+                        <Label id="label2" fx:id="labelSurname" layoutX="224.0" layoutY="168.0" prefHeight="16.0" prefWidth="155.0" text="Label" />
                         <Button fx:id="editStudentDataButton" layoutX="512.0" layoutY="323.0" mnemonicParsing="false" onAction="#editStudentData" text="Edit" />
                         <TextField fx:id="inputName" layoutX="216.0" layoutY="86.0" onAction="#setInputName" />
                         <TextField fx:id="inputSurname" layoutX="216.0" layoutY="163.0" onAction="#setInputSurname" />

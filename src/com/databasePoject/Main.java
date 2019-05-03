@@ -17,15 +17,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("startApp.fxml"));
         Parent root = loader.load();
-        Controller controller = loader.getController();
+        StartAppController controller = loader.getController();
         primaryStage.setTitle("Recruitment App");
-        Scene scene = new Scene(root, 760, 580);
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        Scene scene = new Scene(root, 300, 300);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.setOnHidden(e -> {
-            controller.exitApp();
             Platform.exit();
         });
         primaryStage.show();

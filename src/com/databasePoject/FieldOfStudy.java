@@ -32,8 +32,7 @@ public class FieldOfStudy implements Serializable {
     private int minPoints;
 
     @OneToMany(mappedBy = "idFieldOfStudy",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.ALL})
     private List<Declaration> declarationList;
 
     public FieldOfStudy(){

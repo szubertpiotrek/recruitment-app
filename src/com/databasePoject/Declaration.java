@@ -31,6 +31,7 @@ public class Declaration implements Serializable {
     @Column(name = "exams_score")
     private int examsScore;
 
+
     public Declaration(){
 
     }

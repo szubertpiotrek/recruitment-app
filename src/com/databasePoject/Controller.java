@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.net.URL;
@@ -24,6 +25,9 @@ public class Controller implements Initializable{
 
     @FXML
     private Button editStudentDataButton;
+
+    @FXML
+    private Button saveDeclarationButton;
 
     @FXML
     private TextField inputName;
@@ -170,6 +174,8 @@ public class Controller implements Initializable{
 
     private boolean editFalg;
 
+    private boolean editFlag2;
+
     private Session session;
 
     private SessionFactory factory;
@@ -203,35 +209,38 @@ public class Controller implements Initializable{
                 }
             }
 
+//            System.out.println(student.getDeclarationList());
 
-            labelDeclaration1.setText(fieldOfStudyTempList.get(0).getIdUniversity().getUniversityName() + ", " +
-                    fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFaculty() + ", " +
-                    fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFieldOfStudyName());
+//            labelDeclaration1.setText(fieldOfStudyTempList.get(0).getIdUniversity().getUniversityName() + ", " +
+//                    fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFaculty() + ", " +
+//                    fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFieldOfStudyName());
 
-            if(fieldOfStudyTempList.size()>0) {
-                labelDeclaration1.setText(fieldOfStudyTempList.get(0).getIdUniversity().getUniversityName() + ", " +
-                        fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFaculty() + ", " +
-                        fieldOfStudyTempList.get(0).getIdFieldOfStudy().getFieldOfStudyName());
-            }
-            if(fieldOfStudyTempList.size()>1) {
-                labelDeclaration2.setText(fieldOfStudyTempList.get(1).getIdUniversity().getUniversityName() + ", " +
-                        fieldOfStudyTempList.get(1).getIdFieldOfStudy().getFaculty() + ", " +
-                        fieldOfStudyTempList.get(1).getIdFieldOfStudy().getFieldOfStudyName());
-            }
-            if(fieldOfStudyTempList.size()>2) {
-                labelDeclaration3.setText(fieldOfStudyTempList.get(2).getIdUniversity().getUniversityName() + ", " +
-                        fieldOfStudyTempList.get(2).getIdFieldOfStudy().getFaculty() + ", " +
-                        fieldOfStudyTempList.get(2).getIdFieldOfStudy().getFieldOfStudyName());
-            }
-            if(fieldOfStudyTempList.size()>3) {
-                labelDeclaration4.setText(fieldOfStudyTempList.get(3).getIdUniversity().getUniversityName() + ", " +
-                        fieldOfStudyTempList.get(3).getIdFieldOfStudy().getFaculty() + ", " +
-                        fieldOfStudyTempList.get(3).getIdFieldOfStudy().getFieldOfStudyName());
-            }
-            if(fieldOfStudyTempList.size()>4) {
-                labelDeclaration5.setText(fieldOfStudyTempList.get(4).getIdUniversity().getUniversityName() + ", " +
-                        fieldOfStudyTempList.get(4).getIdFieldOfStudy().getFaculty() + ", " +
-                        fieldOfStudyTempList.get(4).getIdFieldOfStudy().getFieldOfStudyName());
+            for(int i =0; i < fieldOfStudyTempList.size();i++){
+                if(fieldOfStudyTempList.size()>0 && fieldOfStudyTempList.get(i).getPriority()==1) {
+                    labelDeclaration1.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                }
+                if(fieldOfStudyTempList.size()>1 && fieldOfStudyTempList.get(i).getPriority()==2) {
+                    labelDeclaration2.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                }
+                if(fieldOfStudyTempList.size()>2 && fieldOfStudyTempList.get(i).getPriority()==3) {
+                    labelDeclaration3.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                }
+                if(fieldOfStudyTempList.size()>3 && fieldOfStudyTempList.get(i).getPriority()==4) {
+                    labelDeclaration4.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                }
+                if(fieldOfStudyTempList.size()>4 && fieldOfStudyTempList.get(i).getPriority()==5) {
+                    labelDeclaration5.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
+                            fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                }
             }
 
             int Id = (int) session.createQuery("select uni.idUniversity from University uni where uni.universityName = '" + newValue +"'").getSingleResult();
@@ -292,10 +301,12 @@ public class Controller implements Initializable{
             clickColumnFaculty();
         });
 
+
         session = factory.getCurrentSession();
-        idStudent=1;
         session.beginTransaction();
-        student = session.get(Student.class, idStudent);
+        Platform.runLater(() -> {
+            student = session.get(Student.class, idStudent);
+        });
         universityList = session.createQuery("select uni from University uni").getResultList();
 
         ObservableList<TableCells> dane = FXCollections.observableArrayList();
@@ -356,11 +367,31 @@ public class Controller implements Initializable{
         choiceUniversity.setItems(FXCollections.observableArrayList(universityList));
         choiceUniversity.getSelectionModel().selectFirst();
 
+        choiceFaculty1.setDisable(true);
+        choiceFaculty2.setDisable(true);
+        choiceFaculty3.setDisable(true);
+        choiceFaculty4.setDisable(true);
+        choiceFaculty5.setDisable(true);
+        choiceFieldOfStudy1.setDisable(true);
+        choiceFieldOfStudy2.setDisable(true);
+        choiceFieldOfStudy3.setDisable(true);
+        choiceFieldOfStudy4.setDisable(true);
+        choiceFieldOfStudy5.setDisable(true);
+        inputExamScore1.setDisable(true);
+        inputExamScore2.setDisable(true);
+        inputExamScore3.setDisable(true);
+        inputExamScore4.setDisable(true);
+        inputExamScore5.setDisable(true);
+
+        editFlag2=true;
+        saveDeclarationButton.setText("Edit");
+
     }
 
     @FXML
     public void saveDeclaration(){
         if(fieldOfStudyTempList==null) {
+
             university1 = (University) session.createQuery("select uni from University uni where uni.universityName = '" + choiceUniversity.getValue() + "'").getSingleResult();
             fieldOfStudy1 = (FieldOfStudy) session.createQuery("select field from FieldOfStudy field where field.fieldOfStudyName = '" + choiceFieldOfStudy1.getValue() + "'").getSingleResult();
 
@@ -409,56 +440,155 @@ public class Controller implements Initializable{
             session.save(declaration5);
 
 //            session.getTransaction().commit();
-        }else{
+        }else if(!editFlag2){
+            choiceFaculty1.setDisable(true);
+            choiceFaculty2.setDisable(true);
+            choiceFaculty3.setDisable(true);
+            choiceFaculty4.setDisable(true);
+            choiceFaculty5.setDisable(true);
+            choiceFieldOfStudy1.setDisable(true);
+            choiceFieldOfStudy2.setDisable(true);
+            choiceFieldOfStudy3.setDisable(true);
+            choiceFieldOfStudy4.setDisable(true);
+            choiceFieldOfStudy5.setDisable(true);
+            inputExamScore1.setDisable(true);
+            inputExamScore2.setDisable(true);
+            inputExamScore3.setDisable(true);
+            inputExamScore4.setDisable(true);
+            inputExamScore5.setDisable(true);
+
+            saveDeclarationButton.setText("Edit");
+
             declarationTempList = new ArrayList<Declaration>();
 
             declarationList = student.getDeclarationList();
 
             for (Declaration declar: declarationList) {
-                System.out.println(declar.getIdUniversity().getUniversityName());
-                System.out.println(choiceUniversity.getValue());
                 if(declar.getIdUniversity().getUniversityName().equals(choiceUniversity.getValue())){
                     declarationTempList.add(declar);
                 }
             }
+            for(int j =0; j< declarationTempList.size();j++){
+                if(fieldOfStudyTempList.size()>0 && inputExamScore1.getText().length()>0 && declarationTempList.get(j).getPriority()==1){
+                    for(int i=0;i<fieldOfStudyList.size();i++){
+                        if(String.valueOf(fieldOfStudyList.get(i)).equals(choiceFieldOfStudy1.getValue())){
 
+                            String getQuery = "select field from FieldOfStudy field where field.fieldOfStudyName = '" + fieldOfStudyList.get(i) +"'";
+                            FieldOfStudy fieldOfStudy = (FieldOfStudy) session.createQuery(getQuery).getSingleResult();
 
-            if(fieldOfStudyTempList.size()>0 && inputExamScore1.getText().length()>0){
-                declarationTempList.get(0).getIdFieldOfStudy().setFaculty((String) choiceFaculty1.getValue());
-                declarationTempList.get(0).setExamsScore(Integer.parseInt(inputExamScore1.getText()));
-                declarationTempList.get(0).getIdFieldOfStudy().setFieldOfStudyName((String) choiceFieldOfStudy1.getValue());
+                            Declaration declaration1 = new Declaration(1, Integer.parseInt(inputExamScore1.getText()));
+                            System.out.println(fieldOfStudy.getIdFieldOfStudy());
+                            session.delete(declarationTempList.get(j));
+                            session.flush();
+                            declarationTempList.get(j).getIdUniversity().add(declaration1);
+                            declarationTempList.get(j).getIdStudent().add(declaration1);
+                            fieldOfStudy.add(declaration1);
+                            session.save(declaration1);
+                        }
+                    }
+                }
+
+                if(fieldOfStudyTempList.size()>1 && inputExamScore2.getText().length()>0  && declarationTempList.get(j).getPriority()==2) {
+                    for(int i=0;i<fieldOfStudyList.size();i++){
+                        if(String.valueOf(fieldOfStudyList.get(i)).equals(choiceFieldOfStudy2.getValue())){
+                            String getQuery = "select field from FieldOfStudy field where field.fieldOfStudyName = '" + fieldOfStudyList.get(i) +"'";
+                            FieldOfStudy fieldOfStudy = (FieldOfStudy) session.createQuery(getQuery).getSingleResult();
+
+                            Declaration declaration1 = new Declaration(2, Integer.parseInt(inputExamScore2.getText()));
+                            System.out.println(fieldOfStudy.getIdFieldOfStudy());
+                            session.delete(declarationTempList.get(j));
+                            session.flush();
+                            declarationTempList.get(j).getIdUniversity().add(declaration1);
+                            declarationTempList.get(j).getIdStudent().add(declaration1);
+                            fieldOfStudy.add(declaration1);
+                            session.save(declaration1);
+                        }
+                    }
+                }
+
+                if(fieldOfStudyTempList.size()>2 && inputExamScore3.getText().length()>0  && declarationTempList.get(j).getPriority()==3) {
+                    for(int i=0;i<fieldOfStudyList.size();i++){
+                        if(String.valueOf(fieldOfStudyList.get(i)).equals(choiceFieldOfStudy3.getValue())){
+                            String getQuery = "select field from FieldOfStudy field where field.fieldOfStudyName = '" + fieldOfStudyList.get(i) +"'";
+                            FieldOfStudy fieldOfStudy = (FieldOfStudy) session.createQuery(getQuery).getSingleResult();
+
+                            Declaration declaration1 = new Declaration(3, Integer.parseInt(inputExamScore3.getText()));
+                            System.out.println(fieldOfStudy.getIdFieldOfStudy());
+                            session.delete(declarationTempList.get(j));
+                            session.flush();
+                            declarationTempList.get(j).getIdUniversity().add(declaration1);
+                            declarationTempList.get(j).getIdStudent().add(declaration1);
+                            fieldOfStudy.add(declaration1);
+                            session.save(declaration1);
+                        }
+                    }
+                }
+
+                if(fieldOfStudyTempList.size()>3 && inputExamScore4.getText().length()>0  && declarationTempList.get(j).getPriority()==4) {
+                    for(int i=0;i<fieldOfStudyList.size();i++){
+                        if(String.valueOf(fieldOfStudyList.get(i)).equals(choiceFieldOfStudy4.getValue())){
+                            String getQuery = "select field from FieldOfStudy field where field.fieldOfStudyName = '" + fieldOfStudyList.get(i) +"'";
+                            FieldOfStudy fieldOfStudy = (FieldOfStudy) session.createQuery(getQuery).getSingleResult();
+
+                            Declaration declaration1 = new Declaration(4, Integer.parseInt(inputExamScore4.getText()));
+                            System.out.println(fieldOfStudy.getIdFieldOfStudy());
+                            session.delete(declarationTempList.get(j));
+                            session.flush();
+                            declarationTempList.get(j).getIdUniversity().add(declaration1);
+                            declarationTempList.get(j).getIdStudent().add(declaration1);
+                            fieldOfStudy.add(declaration1);
+                            session.save(declaration1);
+                        }
+                    }
+                }
+
+                if(fieldOfStudyTempList.size()>4 && inputExamScore5.getText().length()>0  && declarationTempList.get(j).getPriority()==5) {
+                    for(int i=0;i<fieldOfStudyList.size();i++){
+                        if(String.valueOf(fieldOfStudyList.get(i)).equals(choiceFieldOfStudy5.getValue())){
+                            String getQuery = "select field from FieldOfStudy field where field.fieldOfStudyName = '" + fieldOfStudyList.get(i) +"'";
+                            FieldOfStudy fieldOfStudy = (FieldOfStudy) session.createQuery(getQuery).getSingleResult();
+
+                            Declaration declaration1 = new Declaration(5, Integer.parseInt(inputExamScore5.getText()));
+                            System.out.println(fieldOfStudy.getIdFieldOfStudy());
+                            session.delete(declarationTempList.get(j));
+                            session.flush();
+                            declarationTempList.get(j).getIdUniversity().add(declaration1);
+                            declarationTempList.get(j).getIdStudent().add(declaration1);
+                            fieldOfStudy.add(declaration1);
+                            session.save(declaration1);
+                        }
+                    }
+                }
             }
 
-            if(fieldOfStudyTempList.size()>1 && inputExamScore2.getText().length()>0) {
-                declarationTempList.get(1).getIdFieldOfStudy().setFaculty((String) choiceFaculty2.getValue());
-                declarationTempList.get(1).setExamsScore(Integer.parseInt(inputExamScore2.getText()));
-                declarationTempList.get(1).getIdFieldOfStudy().setFieldOfStudyName((String) choiceFieldOfStudy2.getValue());
-            }
-
-            if(fieldOfStudyTempList.size()>2 && inputExamScore3.getText().length()>0) {
-                declarationTempList.get(2).getIdFieldOfStudy().setFaculty((String) choiceFaculty3.getValue());
-                declarationTempList.get(2).setExamsScore(Integer.parseInt(inputExamScore3.getText()));
-                declarationTempList.get(2).getIdFieldOfStudy().setFieldOfStudyName((String) choiceFieldOfStudy3.getValue());
-            }
-
-            if(fieldOfStudyTempList.size()>3 && inputExamScore4.getText().length()>0) {
-                declarationTempList.get(3).getIdFieldOfStudy().setFaculty((String) choiceFaculty4.getValue());
-                declarationTempList.get(3).setExamsScore(Integer.parseInt(inputExamScore4.getText()));
-                declarationTempList.get(3).getIdFieldOfStudy().setFieldOfStudyName((String) choiceFieldOfStudy4.getValue());
-            }
-
-            if(fieldOfStudyTempList.size()>4 && inputExamScore5.getText().length()>0) {
-                declarationTempList.get(4).setExamsScore(Integer.parseInt(inputExamScore5.getText()));
-                declarationTempList.get(4).getIdFieldOfStudy().setFieldOfStudyName((String) choiceFieldOfStudy5.getValue());
-                declarationTempList.get(4).getIdFieldOfStudy().setFaculty((String) choiceFaculty5.getValue());
-            }
-
+            editFlag2=true;
 //            session.getTransaction().commit();
+        }else{
+
+            choiceFaculty1.setDisable(false);
+            choiceFaculty2.setDisable(false);
+            choiceFaculty3.setDisable(false);
+            choiceFaculty4.setDisable(false);
+            choiceFaculty5.setDisable(false);
+            choiceFieldOfStudy1.setDisable(false);
+            choiceFieldOfStudy2.setDisable(false);
+            choiceFieldOfStudy3.setDisable(false);
+            choiceFieldOfStudy4.setDisable(false);
+            choiceFieldOfStudy5.setDisable(false);
+            inputExamScore1.setDisable(false);
+            inputExamScore2.setDisable(false);
+            inputExamScore3.setDisable(false);
+            inputExamScore4.setDisable(false);
+            inputExamScore5.setDisable(false);
+
+            saveDeclarationButton.setText("Save");
+            editFlag2=false;
         }
     }
 
     @FXML
     public void clickInformation(){
+
     }
 
     @FXML
@@ -466,15 +596,29 @@ public class Controller implements Initializable{
         universityList = session.createQuery("select uni from University uni").getResultList();
         TableCells university = tableUniversity.getSelectionModel().getSelectedItem();
         tableFieldOfStudy.setItems(null);
+
         for (int i=0; i<universityList.size();i++){
             if(universityList.get(i).getUniversityName().equals(university.getUniversity().getValue())){
                 facultyList=universityList.get(i).getFieldOfStudyList();
             }
         }
 
+        List<Integer> facultyTempList = new ArrayList<>();
+
+        for(int i =0;i<facultyList.size();i++){
+            facultyTempList.add(0);
+        }
+
         ObservableList<TableCells> dane = FXCollections.observableArrayList();
         for (int i=0; i<facultyList.size();i++){
-            dane.add(new TableCells(String.valueOf(facultyList.get(i).getFaculty())));
+            if(facultyTempList.get(i)!=1){
+                dane.add(new TableCells(String.valueOf(facultyList.get(i).getFaculty())));
+                for(int j=0;j<facultyList.size();j++){
+                    if(facultyList.get(i).getFaculty().equals(facultyList.get(j).getFaculty())){
+                        facultyTempList.set(j,1);
+                    }
+                }
+            }
         }
         columnFaculty.setCellValueFactory(new PropertyValueFactory<TableCells, String>("university"));
         tableFaculty.setEditable(true);
@@ -515,59 +659,48 @@ public class Controller implements Initializable{
         studentsList = new ArrayList<Student>();
         results.getItems().clear();
 
-        declarationList = session.createQuery("select decl from Declaration decl").getResultList();
+        declarationList = session.createQuery("select decl from Declaration decl order by decl.priority").getResultList();
 
-        int k = 1;
+        List<Integer> tempList = new ArrayList<>();
+        for(int i=0; i< declarationList.size();i++){
+            tempList.add(0);
+        }
+
         int universityLastName=0;
 
         for (int i =0;i<declarationList.size();i++) {
 
-            if(declarationList.get(i).getPriority()==1 && student.getId()==declarationList.get(i).getIdStudent().getId()){
+            if(declarationList.get(i).getPriority()==1 && student.getId()==declarationList.get(i).getIdStudent().getId() && tempList.get(i)!=1){
                 int size = 0;
 
-                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=1 order by decl.examsScore ").getResultList();
-
+                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=1 order by decl.examsScore desc").getResultList();
 
                 if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
                     size= declarationTempList.size();
+
                 }else{
                     size = declarationList.get(i).getIdFieldOfStudy().getStudentsLimit();
+
                 }
 
                 for(int l =0 ; l<size;l++) {
-                    if (declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName()==declarationList.get(i).getIdFieldOfStudy().getFieldOfStudyName() && student.getId() == declarationTempList.get(l).getIdStudent().getId()) {
-                        String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
-                        universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
+
+                    if ((declarationTempList.get(l).getIdFieldOfStudy().getIdFieldOfStudy()==declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy()) && (student.getId() == declarationTempList.get(l).getIdStudent().getId())) {
+                        String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority() + "pkt" + declarationTempList.get(l).getExamsScore();
                         resultsTempList.add(result);
-                    }
-                }
-            }
-            else if(declarationList.get(i).getPriority()==2 && student.getId()==declarationList.get(i).getIdStudent().getId() && declarationList.get(i).getIdUniversity().getIdUniversity()!=universityLastName){
-                int size = 0;
 
-                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=2 order by decl.examsScore ").getResultList();
-
-
-                if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
-                    size= declarationTempList.size();
-                }else{
-                    size = declarationList.get(i).getIdFieldOfStudy().getStudentsLimit();
-                }
-
-                for(int l =0 ; l<size;l++) {
-                    if (declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName()==declarationList.get(i).getIdFieldOfStudy().getFieldOfStudyName() && student.getId() == declarationTempList.get(l).getIdStudent().getId()) {
-                        String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
-                        universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
-                        resultsTempList.add(result);
+                        for(int j =0 ;j<declarationList.size();j++){
+                            if(declarationList.get(i).getIdUniversity().getIdUniversity()==declarationList.get(j).getIdUniversity().getIdUniversity()){
+                                tempList.set(j,1);
+                            }
+                        }
                     }
                 }
 
             }
-            else if(declarationList.get(i).getPriority()==3 && student.getId()==declarationList.get(i).getIdStudent().getId() && declarationList.get(i).getIdUniversity().getIdUniversity()!=universityLastName){
+            else if(declarationList.get(i).getPriority()==2 && student.getId()==declarationList.get(i).getIdStudent().getId() && tempList.get(i)!=1){
                 int size = 0;
-
-                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=3 order by decl.examsScore ").getResultList();
-
+                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=2 order by decl.examsScore desc ").getResultList();
 
                 if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
                     size= declarationTempList.size();
@@ -578,16 +711,23 @@ public class Controller implements Initializable{
                 for(int l =0 ; l<size;l++) {
                     if (declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName()==declarationList.get(i).getIdFieldOfStudy().getFieldOfStudyName() && student.getId() == declarationTempList.get(l).getIdStudent().getId()) {
                         String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
-                        universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
                         resultsTempList.add(result);
+
+                        for(int j =0 ;j<declarationList.size();j++){
+                            if(declarationList.get(i).getIdUniversity().getIdUniversity()==declarationList.get(j).getIdUniversity().getIdUniversity()){
+                                tempList.set(j,1);
+                            }
+                        }
                     }
                 }
 
             }
-            else if(declarationList.get(i).getPriority()==4 && student.getId()==declarationList.get(i).getIdStudent().getId() && declarationList.get(i).getIdUniversity().getIdUniversity()!=universityLastName){
+            else if(declarationList.get(i).getPriority()==3 && student.getId()==declarationList.get(i).getIdStudent().getId() && tempList.get(i)!=1){
                 int size = 0;
 
-                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=4 order by decl.examsScore ").getResultList();
+                System.out.println(declarationList.get(i) + "3");
+
+                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=3 order by decl.examsScore desc").getResultList();
 
 
                 if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
@@ -601,14 +741,20 @@ public class Controller implements Initializable{
                         String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
                         universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
                         resultsTempList.add(result);
+
+                        for(int j =0 ;j<declarationList.size();j++){
+                            if(declarationList.get(i).getIdUniversity().getIdUniversity()==declarationList.get(j).getIdUniversity().getIdUniversity()){
+                                tempList.set(j,1);
+                            }
+                        }
                     }
                 }
 
             }
-            else if(declarationList.get(i).getPriority()==5 && student.getId()==declarationList.get(i).getIdStudent().getId() && declarationList.get(i).getIdUniversity().getIdUniversity()!=universityLastName){
+            else if(declarationList.get(i).getPriority()==4 && student.getId()==declarationList.get(i).getIdStudent().getId() && tempList.get(i)!=1){
                 int size = 0;
 
-                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=5 order by decl.examsScore ").getResultList();
+                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=4 order by decl.examsScore desc").getResultList();
 
 
                 if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
@@ -622,6 +768,37 @@ public class Controller implements Initializable{
                         String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
                         universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
                         resultsTempList.add(result);
+                        for(int j =0 ;j<declarationList.size();j++){
+                            if(declarationList.get(i).getIdUniversity().getIdUniversity()==declarationList.get(j).getIdUniversity().getIdUniversity()){
+                                tempList.set(j,1);
+                            }
+                        }
+                    }
+                }
+
+            }
+            else if(declarationList.get(i).getPriority()==5 && student.getId()==declarationList.get(i).getIdStudent().getId() && tempList.get(i)!=1){
+                int size = 0;
+
+                List<Declaration> declarationTempList = session.createQuery("select decl from Declaration decl where decl.idFieldOfStudy = '" + declarationList.get(i).getIdFieldOfStudy().getIdFieldOfStudy() + "' and decl.priority=5 order by decl.examsScore desc").getResultList();
+
+
+                if(declarationList.get(i).getIdFieldOfStudy().getStudentsLimit()>=declarationTempList.size()){
+                    size= declarationTempList.size();
+                }else{
+                    size = declarationList.get(i).getIdFieldOfStudy().getStudentsLimit();
+                }
+
+                for(int l =0 ; l<size;l++) {
+                    if (declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName()==declarationList.get(i).getIdFieldOfStudy().getFieldOfStudyName() && student.getId() == declarationTempList.get(l).getIdStudent().getId()) {
+                        String result = declarationTempList.get(l).getIdUniversity().getUniversityName() + ", " + declarationTempList.get(l).getIdFieldOfStudy().getFieldOfStudyName() + ", priorytet: " + declarationTempList.get(l).getPriority();
+                        universityLastName=declarationTempList.get(l).getIdUniversity().getIdUniversity();
+                        resultsTempList.add(result);
+                        for(int j =0 ;j<declarationList.size();j++){
+                            if(declarationList.get(i).getIdUniversity().getIdUniversity()==declarationList.get(j).getIdUniversity().getIdUniversity()){
+                                tempList.set(j,1);
+                            }
+                        }
                     }
                 }
 
@@ -647,6 +824,10 @@ public class Controller implements Initializable{
         session.getTransaction().commit();
         session.close();
         factory.close();
+    }
+
+    public void setIdStudent(int id){
+        this.idStudent = id;
     }
 
 
