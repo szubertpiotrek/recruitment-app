@@ -390,7 +390,8 @@ public class Controller implements Initializable{
 
     @FXML
     public void saveDeclaration(){
-        if(fieldOfStudyTempList==null) {
+        System.out.println(fieldOfStudyTempList);
+        if(fieldOfStudyTempList.size()==0 && !editFlag2) {
 
             university1 = (University) session.createQuery("select uni from University uni where uni.universityName = '" + choiceUniversity.getValue() + "'").getSingleResult();
             fieldOfStudy1 = (FieldOfStudy) session.createQuery("select field from FieldOfStudy field where field.fieldOfStudyName = '" + choiceFieldOfStudy1.getValue() + "'").getSingleResult();
@@ -438,6 +439,7 @@ public class Controller implements Initializable{
             university1.add(declaration5);
             fieldOfStudy1.add(declaration5);
             session.save(declaration5);
+            editFlag2=true;
 
 //            session.getTransaction().commit();
         }else if(!editFlag2){
@@ -816,7 +818,7 @@ public class Controller implements Initializable{
         if(text.length()>0 && !StringUtils.isEmptyOrWhitespaceOnly(text)){
             return true;
         }
-       return false;
+        return false;
     }
 
 

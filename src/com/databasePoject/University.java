@@ -17,7 +17,7 @@ public class University {
     @Column(name = "name")
     private String universityName;
 
-    @Column(name = "city")
+    @Column(name = "address")
     private String city;
 
     @Column(name = "street")

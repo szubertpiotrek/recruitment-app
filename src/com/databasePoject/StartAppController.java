@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.hibernate.Session;
@@ -25,11 +26,19 @@ public class StartAppController implements Initializable {
     @FXML
     private TextField inputSurname;
 
+    @FXML
+    private Button newAccount;
+
+    @FXML
+    private Button logInButton;
+
     Session session;
 
     SessionFactory factory;
 
     int idStudent;
+
+    boolean newAccountFlag = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -72,7 +81,7 @@ public class StartAppController implements Initializable {
     public void onClick(){
         StartAppController controller = new StartAppController();
 
-        if(inputSurname.getText().length()>0 && inputName.getText().length()>0) {
+        if(inputSurname.getText().length()>0 && inputName.getText().length()>0 && newAccountFlag==false) {
             try {
                 session.beginTransaction();
                 idStudent = (int) session.createQuery("select student.idStudent from Student student where student.name='" + inputName.getText() + "'" + " and student.surname='" + inputSurname.getText() + "'").getSingleResult();
@@ -84,7 +93,25 @@ public class StartAppController implements Initializable {
                 factory.close();
             }
             controller.openNewWindow(idStudent);
+        }else if(inputSurname.getText().length()>0 && inputName.getText().length()>0 && newAccountFlag==true){
+            Student student = new Student(inputName.getText(),inputSurname.getText());
+            try {
+                session.beginTransaction();
+                session.save(student);
+                session.getTransaction().commit();
+            } finally {
+                session.close();
+                factory.close();
+            }
+            controller.openNewWindow(student.getId());
         }
+    }
+
+    @FXML
+    public void makeNewAccount(){
+        newAccountFlag=true;
+        newAccount.setDisable(true);
+        logInButton.setText("Sing up & Log In");
     }
 
     public int getIdStudent(){
