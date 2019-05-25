@@ -220,26 +220,31 @@ public class Controller implements Initializable{
                     labelDeclaration1.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                    inputExamScore1.setText(String.valueOf(fieldOfStudyTempList.get(i).getExamsScore()));
                 }
                 if(fieldOfStudyTempList.size()>1 && fieldOfStudyTempList.get(i).getPriority()==2) {
                     labelDeclaration2.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                    inputExamScore2.setText(String.valueOf(fieldOfStudyTempList.get(i).getExamsScore()));
                 }
                 if(fieldOfStudyTempList.size()>2 && fieldOfStudyTempList.get(i).getPriority()==3) {
                     labelDeclaration3.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                    inputExamScore3.setText(String.valueOf(fieldOfStudyTempList.get(i).getExamsScore()));
                 }
                 if(fieldOfStudyTempList.size()>3 && fieldOfStudyTempList.get(i).getPriority()==4) {
                     labelDeclaration4.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                    inputExamScore4.setText(String.valueOf(fieldOfStudyTempList.get(i).getExamsScore()));
                 }
                 if(fieldOfStudyTempList.size()>4 && fieldOfStudyTempList.get(i).getPriority()==5) {
                     labelDeclaration5.setText(fieldOfStudyTempList.get(i).getIdUniversity().getUniversityName() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFaculty() + ", " +
                             fieldOfStudyTempList.get(i).getIdFieldOfStudy().getFieldOfStudyName());
+                    inputExamScore5.setText(String.valueOf(fieldOfStudyTempList.get(i).getExamsScore()));
                 }
             }
 
